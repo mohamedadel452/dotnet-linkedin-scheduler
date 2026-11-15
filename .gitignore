@@ -1,0 +1,4 @@
+linkedin_config.json
+latest_ready_post_*.txt
+__pycache__/
+*.jpeg
