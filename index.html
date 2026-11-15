@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LinkedIn .NET Personal Branding Studio | محمد عادل</title>
+  <title>LinkedIn .NET Studio & Custom Scheduler | محمد عادل</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -16,6 +16,7 @@
       --purple: #8b5cf6;
       --green: #10b981;
       --amber: #f59e0b;
+      --red: #ef4444;
       --text: #f3f4f6;
       --muted: #9ca3af;
     }
@@ -37,6 +38,8 @@
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
+      gap: 12px;
+      flex-wrap: wrap;
     }
     .brand {
       display: flex;
@@ -52,9 +55,15 @@
       font-size: 0.95rem;
     }
     .brand h1 {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #fff;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .schedule-pill {
       background: rgba(16, 185, 129, 0.15);
@@ -62,7 +71,7 @@
       color: #34d399;
       padding: 6px 14px;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
     }
     .workspace {
@@ -71,11 +80,11 @@
       overflow: hidden;
     }
     aside {
-      width: 350px;
+      width: 360px;
       background: #0f172a;
       border-left: 1px solid var(--border);
       overflow-y: auto;
-      padding: 16px;
+      padding: 14px;
       flex-shrink: 0;
     }
     .day-item {
@@ -92,7 +101,7 @@
       transform: translateX(-3px);
     }
     .day-item.active {
-      background: linear-gradient(135deg, rgba(10, 102, 194, 0.25), rgba(139, 92, 246, 0.15));
+      background: linear-gradient(135deg, rgba(10, 102, 194, 0.28), rgba(139, 92, 246, 0.18));
       border-color: var(--accent);
     }
     .day-top {
@@ -100,31 +109,44 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 6px;
+      gap: 6px;
     }
     .day-num {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 800;
       color: var(--accent);
       background: rgba(56, 189, 248, 0.12);
       padding: 2px 8px;
       border-radius: 6px;
     }
-    .day-module {
-      font-size: 0.75rem;
-      color: var(--muted);
+    .day-status {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
     }
+    .status-pub { background: rgba(16, 185, 129, 0.18); color: #34d399; }
+    .status-pend { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
+    .status-paused { background: rgba(239, 68, 68, 0.16); color: #f87171; }
     .day-title {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .day-sched {
+      font-size: 0.76rem;
+      color: var(--muted);
+      direction: ltr;
+      text-align: right;
     }
     main {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 32px;
+      padding: 20px 28px;
       display: grid;
-      grid-template-columns: 1.25fr 0.95fr;
-      gap: 24px;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 22px;
     }
     .linkedin-card {
       background: #1b1f23;
@@ -156,84 +178,136 @@
     .li-author p { font-size: 0.8rem; color: #9ca3af; }
     .li-body {
       white-space: pre-wrap;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       line-height: 1.85;
       color: #e5e7eb;
       background: #111418;
-      padding: 20px;
+      padding: 18px;
       border-radius: 8px;
       border: 1px solid #262c36;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       unicode-bidi: plaintext;
+    }
+    textarea.edit-area {
+      width: 100%;
+      min-height: 220px;
+      background: #0d1117;
+      color: #f3f4f6;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      margin-bottom: 12px;
+      display: none;
     }
     .action-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .btn {
-      padding: 10px 16px;
+      padding: 9px 14px;
       border-radius: 8px;
       border: none;
       font-family: inherit;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       text-decoration: none;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
-    .btn:hover { opacity: 0.9; }
+    .btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-green { background: var(--green); color: #052e16; }
+    .btn-amber { background: var(--amber); color: #1c1917; }
     .btn-purple { background: var(--purple); color: #fff; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
     .right-col {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
     .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 18px;
+      padding: 16px;
     }
     .panel h3 {
-      font-size: 1rem;
+      font-size: 0.98rem;
       color: var(--accent);
       margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .input-ctrl {
+      background: #090d16;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.86rem;
+    }
+    .input-ctrl:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .toggle-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
     }
     .img-preview {
       width: 100%;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: #090d16;
-      min-height: 240px;
+      min-height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .img-preview img {
       width: 100%;
       height: auto;
       display: block;
-    }
-    .prompt-box {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.8rem;
-      direction: ltr;
-      background: #090d16;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      color: #cbd5e1;
-      line-height: 1.5;
     }
     .toast {
       position: fixed;
@@ -246,15 +320,16 @@
       border-radius: 10px;
       display: none;
       z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
-
     @media (max-width: 960px) {
       body { height: auto; overflow-y: auto; }
-      header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px; }
+      header { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
       .workspace { flex-direction: column; overflow: visible; }
-      aside { width: 100%; max-height: 280px; border-left: none; border-bottom: 1px solid var(--border); }
-      main { grid-template-columns: 1fr; padding: 16px; overflow: visible; }
-      .action-bar .btn { width: 100%; justify-content: center; }
+      aside { width: 100%; max-height: 290px; border-left: none; border-bottom: 1px solid var(--border); }
+      main { grid-template-columns: 1fr; padding: 14px; overflow: visible; }
+      .form-grid { grid-template-columns: 1fr; }
+      .action-bar .btn { flex: 1 1 calc(50% - 8px); justify-content: center; }
     }
   </style>
 </head>
@@ -262,9 +337,12 @@
   <header>
     <div class="brand">
       <span class="brand-badge">in</span>
-      <h1>استوديو النشر اليومي على LinkedIn — رحلة .NET 10 & C#</h1>
+      <h1>استوديو التحكم وجدولة منشورات LinkedIn السحابي (.NET & C#)</h1>
     </div>
-    <div class="schedule-pill">⏰ مجدول بهدوء (كل يومين/3 أيام — الأحد والثلاثاء والخميس 8:00 مساءً) بناءً على نصيحة الـ Mentor</div>
+    <div class="header-actions">
+      <span class="schedule-pill" id="syncStatusPill">☁️ متصل بالسحابة (توقيت القاهرة)</span>
+      <button class="btn btn-amber" onclick="saveAllToGitHubCloud()">💾 حفظ كل المواعيد والتعديلات في السحابة</button>
+    </div>
   </header>
 
   <div class="workspace">
@@ -272,10 +350,11 @@
     <main>
       <div>
         <div class="action-bar">
-          <button class="btn btn-green" onclick="copyCurrentPost()">📋 نسخ المنشور الكامل (عربي + English)</button>
-          <a class="btn btn-primary" href="https://www.linkedin.com/feed/?shareActive=true" target="_blank">🚀 فتح نافذة النشر على LinkedIn</a>
-          <a id="repoBtn" class="btn btn-outline" href="#" target="_blank">💻 مستودع GitHub</a>
-          <a id="guideBtn" class="btn btn-purple" href="#" target="_blank">🌐 الشرح التفاعلي (HTML)</a>
+          <button class="btn btn-green" onclick="copyCurrentPost()">📋 نسخ البوست</button>
+          <button class="btn btn-amber" onclick="triggerCloudPublishNow()">🚀 انشر هذا البوست الآن فوراً</button>
+          <button class="btn btn-outline" onclick="toggleEditPost()" id="editBtn">✏️ تعديل النص</button>
+          <a id="repoBtn" class="btn btn-outline" href="#" target="_blank">💻 الكود على GitHub</a>
+          <a id="guideBtn" class="btn btn-purple" href="#" target="_blank">🌐 الملخص التفاعلي</a>
         </div>
 
         <div class="linkedin-card">
@@ -286,38 +365,129 @@
               <p>.NET Backend Developer | C# • OOP • SOLID • SQL Server</p>
             </div>
           </div>
+          <textarea id="editPostArea" class="edit-area" oninput="onPostTextEdited()"></textarea>
           <div id="postPreview" class="li-body"></div>
         </div>
       </div>
 
       <div class="right-col">
+        <!-- 1. Per-Post Date & Time Customizer -->
         <div class="panel">
-          <h3>🎨 صورة اليوم المولدة عبر Gemini (Expressive Visual)</h3>
-          <div class="img-preview" id="imgContainer"></div>
-          <p style="font-size:0.82rem; color:var(--muted); margin-bottom:8px;">وصف الصورة الهندسية (Gemini Image Prompt):</p>
-          <div id="promptPreview" class="prompt-box"></div>
+          <h3>
+            <span>📅 تخصيص وقت وتاريخ هذا المنشور</span>
+            <span id="postSeqBadge" style="font-size:0.8rem;color:var(--amber);"></span>
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>تاريخ ووقت النشر (بتوقيت مصر):</label>
+              <input type="datetime-local" id="singleDateTime" class="input-ctrl" onchange="updateSinglePostSchedule()" />
+            </div>
+            <div class="form-group">
+              <label>حالة النشر:</label>
+              <select id="singleStatusSelect" class="input-ctrl" onchange="updateSinglePostStatus()">
+                <option value="pending">⏳ في انتظار دوره (Pending)</option>
+                <option value="published">✅ تم نشره (Published)</option>
+              </select>
+            </div>
+          </div>
+          <label class="toggle-row">
+            <input type="checkbox" id="singleAutoToggle" onchange="updateSinglePostAuto()" />
+            <span>تفعيل النشر السحابي التلقائي لهذا المنشور في موعده</span>
+          </label>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveAllToGitHubCloud()">☁️ حفظ موعد هذا المنشور في السحابة</button>
         </div>
 
+        <!-- 2. Bulk Schedule Customizer for All Pending Posts -->
         <div class="panel">
-          <h3>🔑 حالة الربط مع LinkedIn API</h3>
-          <p style="font-size:0.88rem; line-height:1.6; color:#d1d5db; margin-bottom:10px;">
-            يتم النشر التلقائي عبر السكربت:
-            <code style="color:var(--accent);">LinkedIn_Branding_Engine/publish_to_linkedin.py</code>
+          <h3>⚡ إعادة جدولة كل المنشورات القادمة دفعة واحدة</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>تاريخ أول منشور قادم:</label>
+              <input type="date" id="bulkStartDate" class="input-ctrl" value="2026-11-17" />
+            </div>
+            <div class="form-group">
+              <label>الساعة المفضلة للنشر يومياً:</label>
+              <input type="time" id="bulkTime" class="input-ctrl" value="20:00" />
+            </div>
+            <div class="form-group full">
+              <label>الفاصل الزمني بين كل منشورين (كل كام يوم؟):</label>
+              <select id="bulkIntervalDays" class="input-ctrl">
+                <option value="1">كل يوم (منشور يومياً)</option>
+                <option value="2">كل يومين (منشور كل 48 ساعة)</option>
+                <option value="3" selected>كل 3 أيام (موصى به من الـ Mentor)</option>
+                <option value="4">كل 4 أيام</option>
+                <option value="7">كل أسبوع (منشور أسبوعي)</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-purple" style="width:100%;justify-content:center;" onclick="applyBulkSchedule()">🔄 تطبيق الجدول الجديد على كل المنشورات القادمة</button>
+        </div>
+
+        <!-- 3. Visual Card Preview -->
+        <div class="panel">
+          <h3>🎨 البطاقة المرفقة مع المنشور</h3>
+          <div class="img-preview" id="imgContainer"></div>
+        </div>
+
+        <!-- 4. Cloud GitHub Token Connection (for Mobile & Web Sync) -->
+        <div class="panel">
+          <h3>🔑 مفتاح المزامنة السحابية (لمرة واحدة على الموبايل)</h3>
+          <p style="font-size:0.78rem; color:var(--muted); margin-bottom:8px; line-height:1.5;">
+            لحفظ التعديلات في السحابة مباشرة من الموبايل أو المتصفح، ضع مفتاح GitHub الخاص بك هنا (يُحفظ في متصفحك فقط):
           </p>
-          <p style="font-size:0.82rem; color:var(--muted); line-height:1.6;">
-            لتفعيل النشر المباشر بدون تدخل، ضع الـ Access Token الخاص بك في ملف
-            <code>linkedin_config.json</code> أو راجع ملف <code>TOKEN_SETUP_GUIDE.md</code>.
-          </p>
+          <div style="display:flex; gap:8px;">
+            <input type="password" id="ghTokenInput" class="input-ctrl" style="flex:1;" placeholder="ghp_... أو github_pat_..." onchange="saveTokenLocal()" />
+            <button class="btn btn-outline" onclick="saveTokenLocal()">حفظ</button>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
-  <div id="toast" class="toast">✅ تم نسخ المنشور بالكامل إلى الحافظة!</div>
+  <div id="toast" class="toast">✅ تم التنفيذ بنجاح!</div>
 
   <script>
-    const POSTS = [{"seq": 1, "day": 1, "slot": "published", "slot_label": "✅ تم النشر — البداية وتنظيم GitHub", "id": "post-01-github-organization", "module": "GitHub Portfolio", "title": "تنظيم المشاريع والملخصات على GitHub", "repo_url": "https://github.com/mohamedadel452", "live_guide_url": "", "image_filename": "day01_dotnet_journey.png", "image_prompt": "A modern, sleek 3D isometric tech illustration representing a .NET Software Engineer's learning journey.", "status": "published", "linkedin_post_id": "urn:li:share:7526340900755685376", "arabic_text": "الفترة اللي فاتت قررت أرتب كل المشاريع والأكواد اللي بطبقها في الـ ‎.NET & C#‎ على ‎GitHub‎ بشكل منظم، وعملت مع كل جزء ملخص تفاعلي بالـ ‎HTML‎ عشان أقدر أرجع لأي تفصيلة بسهولة بعدين.\n⠀\nجمعت فيهم تطبيقات على أساسيات اللغة، ومشروع نظام شحن ‎SmartDelivery‎ بالـ ‎OOP‎، وتطبيقات على الـ ‎Generics‎ والـ ‎Delegates‎ والـ ‎Collections‎، وتصميم الـ ‎ERD‎ للداتابيز.\n⠀\nهشارك هنا كل كام يوم ملاحظة سريعة أو جزء عملي من اللي شغال عليه.", "english_text": "", "hashtags": "#DotNet #CSharp #Backend #GitHub"}, {"seq": 2, "day": 3, "slot": "evening", "slot_label": "📅 المنشور 2 (بعد يومين - 8:00 م)", "id": "post-02-memory-boxing-tryparse", "module": "C# Internals", "title": "فكرة الـ Boxing / Unboxing والتحويل الآمن بـ TryParse", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics02-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics02-Assigment/Study_Guide/CSharp_Basics_Session02_Guide.html", "image_filename": "day02_stack_vs_heap.png", "image_prompt": "A high-tech architectural diagram style 3D illustration comparing Stack Memory vs Heap Memory and Boxing/Unboxing in C# .NET.", "status": "pending", "arabic_text": "وأنا براجع طريقة تعامل الـ ‎.NET‎ مع الذاكرة، وقفت عند تفصيلتين صغيرين بس بيفرقوا جداً في نظافة الكود وأدائه:\n⠀\nأول حاجة هي الـ ‎Boxing & Unboxing‎: لما بنخزن قيمة ‎int‎ جوه متغير من نوع ‎object‎، البرنامج بينقل القيمة من الـ ‎Stack‎ ويحجز لها مكان جديد جوه الـ ‎Heap‎، وده لو اتكرر كتير في الكود بيعمل استهلاك للميموري ملوش لازمة.\n⠀\nتاني حاجة هي الاعتماد على ‎int.TryParse‎ بدل ‎int.Parse‎ في التعامل مع مدخلات اليوزر، لأنها بتحميك من إن البرنامج يضرب ‎Exception‎ لو القيمة النصية مش رقم سليم.\n⠀\nده ملخص صغير بالكود للي حابب يبص عليه:", "english_text": "", "hashtags": "#DotNet #CSharp #BackendDevelopment #SoftwareEngineering"}, {"seq": 3, "day": 6, "slot": "evening", "slot_label": "📅 المنشور 3 (كل 3 أيام - 8:00 م)", "id": "post-03-strings-intern-pool", "module": "C# Strings & Memory", "title": "الـ String Intern Pool وإمتى نستخدم StringBuilder", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics03-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics03-Assigment/Study_Guide/CSharp_Basics_Session03_Guide.html", "image_filename": "day03_safe_casting.png", "image_prompt": "A split-screen 3D tech visualization of C# String Interning and StringBuilder in-place buffer modification.", "status": "pending", "arabic_text": "حاجة لطيفة جربتها في ‎C#‎ بخصوص طريقة تخزين النصوص في الذاكرة.\n⠀\nلما بنعرف متغيرين بنفس النص الثابت ونقارن عنوانهم في الميموري بـ ‎ReferenceEquals‎، النتيجة بتطلع ‎true‎ لأن الـ ‎CLR‎ بيخزن النص مرة واحدة في الـ ‎String Intern Pool‎ ويخلي الاتنين يشاوروا عليه توفيرًا للذاكرة.\n⠀\nوعلى العكس، لأن الـ ‎string‎ غير قابل للتعديل (‎Immutable‎)، أي تعديل عليه جوه ‎loop‎ بيخلق كائن جديد في كل لفة، وهنا بييجي دور ‎StringBuilder‎ اللي بيعدل في نفس المكان مباشرة من غير ما يرهق الميموري.", "english_text": "", "hashtags": "#CSharp #DotNet #CleanCode #Backend"}, {"seq": 4, "day": 9, "slot": "evening", "slot_label": "📅 المنشور 4 (كل 3 أيام - 8:00 م)", "id": "post-04-arrays-ref-out", "module": "C# Methods & Memory", "title": "تريكة إرسال Array لدالة عادية مقابل إرسالها بـ ref", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics04-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics04-Assigment/Study_Guide/CSharp_Basics_Session04_Guide.html", "image_filename": "day04_stringbuilder_performance.png", "image_prompt": "A clean futuristic 3D illustration of C# Methods, Arrays, and passing parameters by Value vs Reference (ref and out).", "status": "pending", "arabic_text": "فرق بسيط في ‎C#‎ كان بيلخبطني في الأول: طالما الـ ‎Array‎ هي ‎Reference Type‎، ليه ممكن نحتاج نبعتها لدالة باستخدام الكلمة المفتاحية ‎ref‎؟\n⠀\nلما بنبعت المصفوفة بالطريقة العادية، الدالة بتستلم نسخة من العنوان، فتقدر تعدل عناصر المصفوفة الأصلية عادي جداً.\n⠀\nلكن لو الدالة عملت ‎new‎ وحاولت تستبدل المصفوفة كلها بمصفوفة جديدة، التغيير ده مش هيسمّع بره الدالة غير لو كنا باعتينها بـ ‎ref‎ عشان نغير العنوان الأصلي نفسه.\n⠀\nطبقت الفكرة دي بمثال عملي بسيط مع ملخص ليها في اللينك ده:", "english_text": "", "hashtags": "#CSharp #DotNet #Programming #BackendDeveloper"}, {"seq": 5, "day": 12, "slot": "evening", "slot_label": "📅 المنشور 5 (كل 3 أيام - 8:00 م)", "id": "post-05-smartdelivery-encapsulation-indexers", "module": "OOP • SmartDelivery", "title": "مشروع SmartDelivery (الجزء الأول): الـ Encapsulation والـ Indexers", "repo_url": "https://github.com/mohamedadel452/OOP-Session-01-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-01-Assigment/Study_Guide/OOP_Session01_Deep_Dive.html", "image_filename": "day06_oop_encapsulation.png", "image_prompt": "A sleek 3D glowing capsule representing OOP Encapsulation in a Smart Delivery Management System in C#.", "status": "pending", "arabic_text": "بدأت أطبق مفاهيم الـ ‎OOP‎ في ‎C#‎ على مشروع عملي صغير لنظام إدارة شحنات (‎SmartDelivery‎).\n⠀\nفي أول خطوة ركزت إن بيانات الشحنة في ‎Shipment‎ متكونش مكشوفة، فخليت الحقول ‎private‎ وحطيت شروط التحقق جوه الـ ‎Properties‎ عشان أمنع أي قيم غلط للوزن أو رسوم التوصيل.\n⠀\nوكمان جوه كلاس ‎DeliveryCenter‎ عملت ‎Indexer‎ بيخليني أقدر أبحث عن أي شحنة مباشرة بكود التتبع بتاعها ‎center[\"TRK-101\"]‎ بسهولة كأني بتعامل مع مصفوفة عادية.", "english_text": "", "hashtags": "#OOP #CSharp #DotNet #SoftwareDesign"}, {"seq": 6, "day": 15, "slot": "evening", "slot_label": "📅 المنشور 6 (كل 3 أيام - 8:00 م)", "id": "post-06-smartdelivery-inheritance-polymorphism", "module": "OOP • SmartDelivery", "title": "تطوير نظام الشحن (SmartDelivery): الـ Inheritance والـ Polymorphism", "repo_url": "https://github.com/mohamedadel452/OOP-Session-03-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-03-Assigment/Study_Guide/OOP_Session03_04_Dispatch_&_SOLID_Deep_Dive.html", "image_filename": "day08_inheritance_polymorphism.png", "image_prompt": "A 3D architectural hierarchy tree in glowing neon blue and gold showing Shipment Polymorphism, Overloading vs Overriding, and Sealed Classes.", "status": "pending", "arabic_text": "كملت تطوير في مشروع الشحن ‎SmartDelivery‎ عشان يدعم أنواع مختلفة من الشحنات (عادية، سريعة ‎ExpressShipment‎، ودولية ‎InternationalShipment‎).\n⠀\nبدل ما أكرر الكود، جمعت الخصائص المشتركة في الكلاس الأب ‎Shipment‎، وخليت كل نوع شحنة يعمل ‎override‎ لحسبة التكلفة ‎EstimatedCost‎ على حسب الرسوم الإضافية أو الجمارك الخاصة بيه.\n⠀\nالميزة هنا إن لما بحط الشحنات دي كلها جوه مصفوفة واحدة من نوع ‎Shipment[]‎، كل كائن وقت التشغيل بينفذ المعادلة الخاصة بيه تلقائياً بفضل الـ ‎Polymorphism‎, واستخدمت ‎sealed‎ مع الكلاسات اللي مش مفروض حد يورث منها زي ‎CompletedShipment‎.", "english_text": "", "hashtags": "#OOP #Polymorphism #CSharp #DotNet"}, {"seq": 7, "day": 18, "slot": "evening", "slot_label": "📅 المنشور 7 (كل 3 أيام - 8:00 م)", "id": "post-07-smartdelivery-abstraction-interfaces", "module": "OOP • SmartDelivery", "title": "الفرق العملي بين Abstract Class و Interface في مشروع الشحن", "repo_url": "https://github.com/mohamedadel452/OOP-Session-04-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-04-Assigment/Study_Guide/OOP_Session04_Deep_Dive.html", "image_filename": "day09_abstraction_operators.png", "image_prompt": "A futuristic 3D concept art of C# Abstract Classes and Interfaces (ITrackable and IInsurable) in a Smart Delivery System.", "status": "pending", "arabic_text": "أكتر حاجة وضحتلي الفرق بين ‎Abstract Class‎ و ‎Interface‎ هي لما طبقتهم مع بعض في مشروع الشحن ‎SmartDelivery‎.\n⠀\nلأن مفيش شحنة في الواقع من غير نوع محدد، حولت كلاس ‎Shipment‎ لـ ‎abstract class‎ عشان يمثل الهوية الأساسية المشتركة لكل الشحنات ويمنع إنشاء كائن مباشر منه.\n⠀\nوفي نفس الوقت، فصلت المميزات الإضافية زي التتبع والتأمين في واجهات منفصلة ‎ITrackable‎ و ‎IInsurable‎، وبكده كلاس التقارير ‎DeliveryReport‎ بقى يتعامل مع الواجهات دي مباشرة من غير ما يرتبط بنوع شحنة معين.", "english_text": "", "hashtags": "#CSharp #DotNet #OOP #CleanCode"}, {"seq": 8, "day": 21, "slot": "evening", "slot_label": "📅 المنشور 8 (كل 3 أيام - 8:00 م)", "id": "post-08-smartdelivery-deepcopy-extensions", "module": "OOP • SmartDelivery", "title": "النسخ السطحي والعميق (Shallow vs Deep Copy) والـ Extension Methods", "repo_url": "https://github.com/mohamedadel452/OOP-Session-05-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-05-Assigment/Study_Guide/OOP_Session05_Deep_Dive.html", "image_filename": "day10_interfaces_solid.png", "image_prompt": "A high-tech 3D modular architecture diagram showing Deep Copy vs Shallow Copy in Heap memory, Partial Classes, and Extension Methods in C#.", "status": "pending", "arabic_text": "في آخر جزء من مشروع ‎SmartDelivery‎، جربت مشكلة مشهورة بتحصل لما ننسخ كائن جواه ‎Reference Type‎ تاني (زي كلاس العنوان ‎DeliveryAddress‎ جوه الشحنة).\n⠀\nفي الـ ‎Shallow Copy‎، الشحنة الجديدة والقديمة بيشاوروا على نفس كائن العنوان في الميموري، فلو عدلت عنوان واحدة فيهم التانية بتتغير معاها بالغلط. عشان كده طبقت ‎Deep Copy‎ بينشئ نسخة مستقلة تماماً من العنوان.\n⠀\nوضفت كمان ‎Extension Method‎ في كلاس ‎ShipmentExtensions‎ وتقسيم لكلاس الشحنة باستخدام ‎partial class‎ عشان أفصل كود التتبع في ملف لوحده.", "english_text": "", "hashtags": "#CSharp #DotNet #OOP #BackendDevelopment"}, {"seq": 9, "day": 24, "slot": "evening", "slot_label": "📅 المنشور 9 (كل 3 أيام - 8:00 م)", "id": "post-09-generics-inmemory-cache", "module": "Advanced C# • Generics", "title": "تطبيق الـ Generics وبناء Cache<TKey, TValue> بوقت صلاحية (TTL)", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-01", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-01/Study_Guide/Generics_Deep_Part1_Core.html", "image_filename": "day11_generics_cache.png", "image_prompt": "A futuristic 3D visualization of C# Generics, Type Constraints, and an In-Memory Cache Engine.", "status": "pending", "arabic_text": "من أكتر المواضيع اللي استمتعت بتطبيقها في ‎C#‎ هي الـ ‎Generics‎ لأنها بتخليك تكتب كود يشتغل مع أي نوع بيانات بكفاءة ومن غير أي ‎Boxing‎.\n⠀\nكتطبيق عملي عليها، بنيت كلاس ‎Cache<TKey, TValue>‎ لتخزين البيانات مؤقتاً في الميموري، وكل عنصر بيتحفظ جواه بيكون ليه وقت انتهاء صلاحية (‎Expiration Time / TTL‎) بحيث يتحذف تلقائياً أول ما وقته يخلص، مع تجربة قيود الأنواع (‎Generic Constraints‎) والـ ‎IRepository<T>‎.", "english_text": "", "hashtags": "#CSharp #DotNet #Generics #Backend"}, {"seq": 10, "day": 27, "slot": "evening", "slot_label": "📅 المنشور 10 (كل 3 أيام - 8:00 م)", "id": "post-10-shopmaster-delegates", "module": "Advanced C# • Delegates", "title": "استخدام Func و Action و Predicate في مشروع ShopMaster", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-02", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-02/Study_Guide/Delegates_Part1_Core.html", "image_filename": "day13_delegates_lambdas.png", "image_prompt": "A sleek 3D functional programming pipeline in C# for the ShopMaster Online Store engine using Func, Action, Predicate, and Lambda expressions.", "status": "pending", "arabic_text": "فهم الـ ‎Delegates‎ والـ ‎Lambda Expressions‎ وضحلي جداً إزاي دوال الـ ‎LINQ‎ مبنية من جوه.\n⠀\nطبقت الفكرة على مشروع متجر صغير (‎ShopMaster‎): بدل ما أكتب دالة تفلتر المنتجات بالسعر ودالة تانية تفلتر بالقسم، عملت دالة واحدة في ‎ProductFilter‎ بتستقبل شرط الفلترة كـ ‎Predicate<Product>‎.\n⠀\nواستخدمت نفس الأسلوب مع ‎Func<Product, TResult>‎ لتحويل شكل بيانات المنتج، و ‎Action<Product>‎ في ‎ReportEngine‎ لتغيير طريقة طباعة التقرير بمرونة من غير تكرار كود.", "english_text": "", "hashtags": "#CSharp #DotNet #CleanCode #LINQ"}, {"seq": 11, "day": 30, "slot": "evening", "slot_label": "📅 المنشور 11 (كل 3 أيام - 8:00 م)", "id": "post-11-collections-data-structures", "module": "Advanced C# • Collections", "title": "اختيار الـ Collection المناسب في C# (Dictionary vs HashSet vs Queue & Stack)", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-03", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-03/Study_Guide/session03-part1-collections-list.html", "image_filename": "day12_collections_complexity.png", "image_prompt": "A 3D high-tech visualization of .NET Collections: List, SortedList Leaderboard, Dictionary PhoneBook, HashSet EmailValidator, Queue PrintSimulator, and Stack BrowserHistory.", "status": "pending", "arabic_text": "أكتر حاجة بتفرق في سرعة الكود لما حجم البيانات يكبر هي اختيار الـ ‎Collection‎ المناسب للمشكلة بدل الاعتماد على ‎List<T>‎ في كل حاجة.\n⠀\nجمعت 6 أمثلة تطبيقية صغيرة في مشروع واحد بيوضحوا استخدام كل هيكل: زي استخدام ‎HashSet<string>‎ لمنع تكرار الإيميلات بسرعة ‎O(1)‎، و ‎Dictionary‎ للبحث السريع، و ‎SortedList‎ لترتيب لوحة المتصدرين تلقائياً، بجانب ‎Queue‎ لطابور الطباعة و ‎Stack‎ لمحاكاة خطوات الرجوع ‎Undo‎ في المتصفح.", "english_text": "", "hashtags": "#CSharp #DotNet #DataStructures #Backend"}, {"seq": 12, "day": 33, "slot": "evening", "slot_label": "📅 المنشور 12 (كل 3 أيام - 8:00 م)", "id": "post-12-database-erd-design", "module": "Database Design • ERD", "title": "تصميم الـ ERD لنظام حجز فنادق ومتجر إلكتروني", "repo_url": "https://github.com/mohamedadel452/Database-Session-01-Assigment", "live_guide_url": "https://mohamedadel452.github.io/Database-Session-01-Assigment/Study_Guide/ERD_Part1_Design_Intro.html", "image_filename": "day14_database_erd.png", "image_prompt": "A futuristic 3D database architecture blueprint showing Entity-Relationship Diagrams for a Hotel Reservation System and an Online Retail Store transforming into SQL tables.", "status": "pending", "arabic_text": "بدأت الفترة دي أركز على جانب تصميم قواعد البيانات، لأن أي نظام ‎Backend‎ قوي بيبدأ من تصميم ‎Database Schema‎ صح.\n⠀\nاشتغلت على تحليل ورسم مخطط الـ ‎ERD‎ لنظامين: الأول لنظام إدارة حجوزات فنادق (‎Hotel Reservation System‎)، والتاني لمتجر أونلاين (‎Online Retail Store‎)، مع تحديد الكيانات والمفاتيح الأساسية وتوصيف العلاقات (‎1:N, M:N‎) قبل تحويلها لجداول.\n⠀\nرفعت المخططين مع ملخص لقواعد رسم الـ ERD وتحويله لـ Relational Model في اللينك ده:", "english_text": "", "hashtags": "#Database #SQLServer #ERD #Backend #DotNet"}];
+    let POSTS = [{"seq": 1, "day": 1, "slot": "published", "slot_label": "✅ تم النشر — البداية وتنظيم GitHub", "id": "post-01-github-organization", "module": "GitHub Portfolio", "title": "تنظيم المشاريع والملخصات على GitHub", "repo_url": "https://github.com/mohamedadel452", "live_guide_url": "", "image_filename": "day01_dotnet_journey.png", "image_prompt": "A modern, sleek 3D isometric tech illustration representing a .NET Software Engineer's learning journey.", "status": "published", "linkedin_post_id": "urn:li:share:7526340900755685376", "arabic_text": "الفترة اللي فاتت قررت أرتب كل المشاريع والأكواد اللي بطبقها في الـ ‎.NET & C#‎ على ‎GitHub‎ بشكل منظم، وعملت مع كل جزء ملخص تفاعلي بالـ ‎HTML‎ عشان أقدر أرجع لأي تفصيلة بسهولة بعدين.\n⠀\nجمعت فيهم تطبيقات على أساسيات اللغة، ومشروع نظام شحن ‎SmartDelivery‎ بالـ ‎OOP‎، وتطبيقات على الـ ‎Generics‎ والـ ‎Delegates‎ والـ ‎Collections‎، وتصميم الـ ‎ERD‎ للداتابيز.\n⠀\nهشارك هنا كل كام يوم ملاحظة سريعة أو جزء عملي من اللي شغال عليه.", "english_text": "", "hashtags": "#DotNet #CSharp #Backend #GitHub", "scheduled_at": "2026-11-11T20:00", "auto_publish": true}, {"seq": 2, "day": 3, "slot": "evening", "slot_label": "📅 مجدول: 2026-11-17 الساعة 20:00", "id": "post-02-memory-boxing-tryparse", "module": "C# Internals", "title": "فكرة الـ Boxing / Unboxing والتحويل الآمن بـ TryParse", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics02-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics02-Assigment/Study_Guide/CSharp_Basics_Session02_Guide.html", "image_filename": "day02_stack_vs_heap.png", "image_prompt": "A high-tech architectural diagram style 3D illustration comparing Stack Memory vs Heap Memory and Boxing/Unboxing in C# .NET.", "status": "pending", "arabic_text": "وأنا براجع طريقة تعامل الـ ‎.NET‎ مع الذاكرة، وقفت عند تفصيلتين صغيرين بس بيفرقوا جداً في نظافة الكود وأدائه:\n⠀\nأول حاجة هي الـ ‎Boxing & Unboxing‎: لما بنخزن قيمة ‎int‎ جوه متغير من نوع ‎object‎، البرنامج بينقل القيمة من الـ ‎Stack‎ ويحجز لها مكان جديد جوه الـ ‎Heap‎، وده لو اتكرر كتير في الكود بيعمل استهلاك للميموري ملوش لازمة.\n⠀\nتاني حاجة هي الاعتماد على ‎int.TryParse‎ بدل ‎int.Parse‎ في التعامل مع مدخلات اليوزر، لأنها بتحميك من إن البرنامج يضرب ‎Exception‎ لو القيمة النصية مش رقم سليم.\n⠀\nده ملخص صغير بالكود للي حابب يبص عليه:", "english_text": "", "hashtags": "#DotNet #CSharp #BackendDevelopment #SoftwareEngineering", "scheduled_at": "2026-11-17T20:00", "auto_publish": true}, {"seq": 3, "day": 6, "slot": "evening", "slot_label": "📅 مجدول: 2026-11-20 الساعة 20:00", "id": "post-03-strings-intern-pool", "module": "C# Strings & Memory", "title": "الـ String Intern Pool وإمتى نستخدم StringBuilder", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics03-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics03-Assigment/Study_Guide/CSharp_Basics_Session03_Guide.html", "image_filename": "day03_safe_casting.png", "image_prompt": "A split-screen 3D tech visualization of C# String Interning and StringBuilder in-place buffer modification.", "status": "pending", "arabic_text": "حاجة لطيفة جربتها في ‎C#‎ بخصوص طريقة تخزين النصوص في الذاكرة.\n⠀\nلما بنعرف متغيرين بنفس النص الثابت ونقارن عنوانهم في الميموري بـ ‎ReferenceEquals‎، النتيجة بتطلع ‎true‎ لأن الـ ‎CLR‎ بيخزن النص مرة واحدة في الـ ‎String Intern Pool‎ ويخلي الاتنين يشاوروا عليه توفيرًا للذاكرة.\n⠀\nوعلى العكس، لأن الـ ‎string‎ غير قابل للتعديل (‎Immutable‎)، أي تعديل عليه جوه ‎loop‎ بيخلق كائن جديد في كل لفة، وهنا بييجي دور ‎StringBuilder‎ اللي بيعدل في نفس المكان مباشرة من غير ما يرهق الميموري.", "english_text": "", "hashtags": "#CSharp #DotNet #CleanCode #Backend", "scheduled_at": "2026-11-20T20:00", "auto_publish": true}, {"seq": 4, "day": 9, "slot": "evening", "slot_label": "📅 مجدول: 2026-11-23 الساعة 20:00", "id": "post-04-arrays-ref-out", "module": "C# Methods & Memory", "title": "تريكة إرسال Array لدالة عادية مقابل إرسالها بـ ref", "repo_url": "https://github.com/mohamedadel452/CSharp-Basics04-Assigment", "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics04-Assigment/Study_Guide/CSharp_Basics_Session04_Guide.html", "image_filename": "day04_stringbuilder_performance.png", "image_prompt": "A clean futuristic 3D illustration of C# Methods, Arrays, and passing parameters by Value vs Reference (ref and out).", "status": "pending", "arabic_text": "فرق بسيط في ‎C#‎ كان بيلخبطني في الأول: طالما الـ ‎Array‎ هي ‎Reference Type‎، ليه ممكن نحتاج نبعتها لدالة باستخدام الكلمة المفتاحية ‎ref‎؟\n⠀\nلما بنبعت المصفوفة بالطريقة العادية، الدالة بتستلم نسخة من العنوان، فتقدر تعدل عناصر المصفوفة الأصلية عادي جداً.\n⠀\nلكن لو الدالة عملت ‎new‎ وحاولت تستبدل المصفوفة كلها بمصفوفة جديدة، التغيير ده مش هيسمّع بره الدالة غير لو كنا باعتينها بـ ‎ref‎ عشان نغير العنوان الأصلي نفسه.\n⠀\nطبقت الفكرة دي بمثال عملي بسيط مع ملخص ليها في اللينك ده:", "english_text": "", "hashtags": "#CSharp #DotNet #Programming #BackendDeveloper", "scheduled_at": "2026-11-23T20:00", "auto_publish": true}, {"seq": 5, "day": 12, "slot": "evening", "slot_label": "📅 مجدول: 2026-11-26 الساعة 20:00", "id": "post-05-smartdelivery-encapsulation-indexers", "module": "OOP • SmartDelivery", "title": "مشروع SmartDelivery (الجزء الأول): الـ Encapsulation والـ Indexers", "repo_url": "https://github.com/mohamedadel452/OOP-Session-01-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-01-Assigment/Study_Guide/OOP_Session01_Deep_Dive.html", "image_filename": "day06_oop_encapsulation.png", "image_prompt": "A sleek 3D glowing capsule representing OOP Encapsulation in a Smart Delivery Management System in C#.", "status": "pending", "arabic_text": "بدأت أطبق مفاهيم الـ ‎OOP‎ في ‎C#‎ على مشروع عملي صغير لنظام إدارة شحنات (‎SmartDelivery‎).\n⠀\nفي أول خطوة ركزت إن بيانات الشحنة في ‎Shipment‎ متكونش مكشوفة، فخليت الحقول ‎private‎ وحطيت شروط التحقق جوه الـ ‎Properties‎ عشان أمنع أي قيم غلط للوزن أو رسوم التوصيل.\n⠀\nوكمان جوه كلاس ‎DeliveryCenter‎ عملت ‎Indexer‎ بيخليني أقدر أبحث عن أي شحنة مباشرة بكود التتبع بتاعها ‎center[\"TRK-101\"]‎ بسهولة كأني بتعامل مع مصفوفة عادية.", "english_text": "", "hashtags": "#OOP #CSharp #DotNet #SoftwareDesign", "scheduled_at": "2026-11-26T20:00", "auto_publish": true}, {"seq": 6, "day": 15, "slot": "evening", "slot_label": "📅 مجدول: 2026-11-29 الساعة 20:00", "id": "post-06-smartdelivery-inheritance-polymorphism", "module": "OOP • SmartDelivery", "title": "تطوير نظام الشحن (SmartDelivery): الـ Inheritance والـ Polymorphism", "repo_url": "https://github.com/mohamedadel452/OOP-Session-03-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-03-Assigment/Study_Guide/OOP_Session03_04_Dispatch_&_SOLID_Deep_Dive.html", "image_filename": "day08_inheritance_polymorphism.png", "image_prompt": "A 3D architectural hierarchy tree in glowing neon blue and gold showing Shipment Polymorphism, Overloading vs Overriding, and Sealed Classes.", "status": "pending", "arabic_text": "كملت تطوير في مشروع الشحن ‎SmartDelivery‎ عشان يدعم أنواع مختلفة من الشحنات (عادية، سريعة ‎ExpressShipment‎، ودولية ‎InternationalShipment‎).\n⠀\nبدل ما أكرر الكود، جمعت الخصائص المشتركة في الكلاس الأب ‎Shipment‎، وخليت كل نوع شحنة يعمل ‎override‎ لحسبة التكلفة ‎EstimatedCost‎ على حسب الرسوم الإضافية أو الجمارك الخاصة بيه.\n⠀\nالميزة هنا إن لما بحط الشحنات دي كلها جوه مصفوفة واحدة من نوع ‎Shipment[]‎، كل كائن وقت التشغيل بينفذ المعادلة الخاصة بيه تلقائياً بفضل الـ ‎Polymorphism‎, واستخدمت ‎sealed‎ مع الكلاسات اللي مش مفروض حد يورث منها زي ‎CompletedShipment‎.", "english_text": "", "hashtags": "#OOP #Polymorphism #CSharp #DotNet", "scheduled_at": "2026-11-29T20:00", "auto_publish": true}, {"seq": 7, "day": 18, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-02 الساعة 20:00", "id": "post-07-smartdelivery-abstraction-interfaces", "module": "OOP • SmartDelivery", "title": "الفرق العملي بين Abstract Class و Interface في مشروع الشحن", "repo_url": "https://github.com/mohamedadel452/OOP-Session-04-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-04-Assigment/Study_Guide/OOP_Session04_Deep_Dive.html", "image_filename": "day09_abstraction_operators.png", "image_prompt": "A futuristic 3D concept art of C# Abstract Classes and Interfaces (ITrackable and IInsurable) in a Smart Delivery System.", "status": "pending", "arabic_text": "أكتر حاجة وضحتلي الفرق بين ‎Abstract Class‎ و ‎Interface‎ هي لما طبقتهم مع بعض في مشروع الشحن ‎SmartDelivery‎.\n⠀\nلأن مفيش شحنة في الواقع من غير نوع محدد، حولت كلاس ‎Shipment‎ لـ ‎abstract class‎ عشان يمثل الهوية الأساسية المشتركة لكل الشحنات ويمنع إنشاء كائن مباشر منه.\n⠀\nوفي نفس الوقت، فصلت المميزات الإضافية زي التتبع والتأمين في واجهات منفصلة ‎ITrackable‎ و ‎IInsurable‎، وبكده كلاس التقارير ‎DeliveryReport‎ بقى يتعامل مع الواجهات دي مباشرة من غير ما يرتبط بنوع شحنة معين.", "english_text": "", "hashtags": "#CSharp #DotNet #OOP #CleanCode", "scheduled_at": "2026-12-02T20:00", "auto_publish": true}, {"seq": 8, "day": 21, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-05 الساعة 20:00", "id": "post-08-smartdelivery-deepcopy-extensions", "module": "OOP • SmartDelivery", "title": "النسخ السطحي والعميق (Shallow vs Deep Copy) والـ Extension Methods", "repo_url": "https://github.com/mohamedadel452/OOP-Session-05-Assigment", "live_guide_url": "https://mohamedadel452.github.io/OOP-Session-05-Assigment/Study_Guide/OOP_Session05_Deep_Dive.html", "image_filename": "day10_interfaces_solid.png", "image_prompt": "A high-tech 3D modular architecture diagram showing Deep Copy vs Shallow Copy in Heap memory, Partial Classes, and Extension Methods in C#.", "status": "pending", "arabic_text": "في آخر جزء من مشروع ‎SmartDelivery‎، جربت مشكلة مشهورة بتحصل لما ننسخ كائن جواه ‎Reference Type‎ تاني (زي كلاس العنوان ‎DeliveryAddress‎ جوه الشحنة).\n⠀\nفي الـ ‎Shallow Copy‎، الشحنة الجديدة والقديمة بيشاوروا على نفس كائن العنوان في الميموري، فلو عدلت عنوان واحدة فيهم التانية بتتغير معاها بالغلط. عشان كده طبقت ‎Deep Copy‎ بينشئ نسخة مستقلة تماماً من العنوان.\n⠀\nوضفت كمان ‎Extension Method‎ في كلاس ‎ShipmentExtensions‎ وتقسيم لكلاس الشحنة باستخدام ‎partial class‎ عشان أفصل كود التتبع في ملف لوحده.", "english_text": "", "hashtags": "#CSharp #DotNet #OOP #BackendDevelopment", "scheduled_at": "2026-12-05T20:00", "auto_publish": true}, {"seq": 9, "day": 24, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-08 الساعة 20:00", "id": "post-09-generics-inmemory-cache", "module": "Advanced C# • Generics", "title": "تطبيق الـ Generics وبناء Cache<TKey, TValue> بوقت صلاحية (TTL)", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-01", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-01/Study_Guide/Generics_Deep_Part1_Core.html", "image_filename": "day11_generics_cache.png", "image_prompt": "A futuristic 3D visualization of C# Generics, Type Constraints, and an In-Memory Cache Engine.", "status": "pending", "arabic_text": "من أكتر المواضيع اللي استمتعت بتطبيقها في ‎C#‎ هي الـ ‎Generics‎ لأنها بتخليك تكتب كود يشتغل مع أي نوع بيانات بكفاءة ومن غير أي ‎Boxing‎.\n⠀\nكتطبيق عملي عليها، بنيت كلاس ‎Cache<TKey, TValue>‎ لتخزين البيانات مؤقتاً في الميموري، وكل عنصر بيتحفظ جواه بيكون ليه وقت انتهاء صلاحية (‎Expiration Time / TTL‎) بحيث يتحذف تلقائياً أول ما وقته يخلص، مع تجربة قيود الأنواع (‎Generic Constraints‎) والـ ‎IRepository<T>‎.", "english_text": "", "hashtags": "#CSharp #DotNet #Generics #Backend", "scheduled_at": "2026-12-08T20:00", "auto_publish": true}, {"seq": 10, "day": 27, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-11 الساعة 20:00", "id": "post-10-shopmaster-delegates", "module": "Advanced C# • Delegates", "title": "استخدام Func و Action و Predicate في مشروع ShopMaster", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-02", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-02/Study_Guide/Delegates_Part1_Core.html", "image_filename": "day13_delegates_lambdas.png", "image_prompt": "A sleek 3D functional programming pipeline in C# for the ShopMaster Online Store engine using Func, Action, Predicate, and Lambda expressions.", "status": "pending", "arabic_text": "فهم الـ ‎Delegates‎ والـ ‎Lambda Expressions‎ وضحلي جداً إزاي دوال الـ ‎LINQ‎ مبنية من جوه.\n⠀\nطبقت الفكرة على مشروع متجر صغير (‎ShopMaster‎): بدل ما أكتب دالة تفلتر المنتجات بالسعر ودالة تانية تفلتر بالقسم، عملت دالة واحدة في ‎ProductFilter‎ بتستقبل شرط الفلترة كـ ‎Predicate<Product>‎.\n⠀\nواستخدمت نفس الأسلوب مع ‎Func<Product, TResult>‎ لتحويل شكل بيانات المنتج، و ‎Action<Product>‎ في ‎ReportEngine‎ لتغيير طريقة طباعة التقرير بمرونة من غير تكرار كود.", "english_text": "", "hashtags": "#CSharp #DotNet #CleanCode #LINQ", "scheduled_at": "2026-12-11T20:00", "auto_publish": true}, {"seq": 11, "day": 30, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-14 الساعة 20:00", "id": "post-11-collections-data-structures", "module": "Advanced C# • Collections", "title": "اختيار الـ Collection المناسب في C# (Dictionary vs HashSet vs Queue & Stack)", "repo_url": "https://github.com/mohamedadel452/Advanced-CSharp-03", "live_guide_url": "https://mohamedadel452.github.io/Advanced-CSharp-03/Study_Guide/session03-part1-collections-list.html", "image_filename": "day12_collections_complexity.png", "image_prompt": "A 3D high-tech visualization of .NET Collections: List, SortedList Leaderboard, Dictionary PhoneBook, HashSet EmailValidator, Queue PrintSimulator, and Stack BrowserHistory.", "status": "pending", "arabic_text": "أكتر حاجة بتفرق في سرعة الكود لما حجم البيانات يكبر هي اختيار الـ ‎Collection‎ المناسب للمشكلة بدل الاعتماد على ‎List<T>‎ في كل حاجة.\n⠀\nجمعت 6 أمثلة تطبيقية صغيرة في مشروع واحد بيوضحوا استخدام كل هيكل: زي استخدام ‎HashSet<string>‎ لمنع تكرار الإيميلات بسرعة ‎O(1)‎، و ‎Dictionary‎ للبحث السريع، و ‎SortedList‎ لترتيب لوحة المتصدرين تلقائياً، بجانب ‎Queue‎ لطابور الطباعة و ‎Stack‎ لمحاكاة خطوات الرجوع ‎Undo‎ في المتصفح.", "english_text": "", "hashtags": "#CSharp #DotNet #DataStructures #Backend", "scheduled_at": "2026-12-14T20:00", "auto_publish": true}, {"seq": 12, "day": 33, "slot": "evening", "slot_label": "📅 مجدول: 2026-12-17 الساعة 20:00", "id": "post-12-database-erd-design", "module": "Database Design • ERD", "title": "تصميم الـ ERD لنظام حجز فنادق ومتجر إلكتروني", "repo_url": "https://github.com/mohamedadel452/Database-Session-01-Assigment", "live_guide_url": "https://mohamedadel452.github.io/Database-Session-01-Assigment/Study_Guide/ERD_Part1_Design_Intro.html", "image_filename": "day14_database_erd.png", "image_prompt": "A futuristic 3D database architecture blueprint showing Entity-Relationship Diagrams for a Hotel Reservation System and an Online Retail Store transforming into SQL tables.", "status": "pending", "arabic_text": "بدأت الفترة دي أركز على جانب تصميم قواعد البيانات، لأن أي نظام ‎Backend‎ قوي بيبدأ من تصميم ‎Database Schema‎ صح.\n⠀\nاشتغلت على تحليل ورسم مخطط الـ ‎ERD‎ لنظامين: الأول لنظام إدارة حجوزات فنادق (‎Hotel Reservation System‎)، والتاني لمتجر أونلاين (‎Online Retail Store‎)، مع تحديد الكيانات والمفاتيح الأساسية وتوصيف العلاقات (‎1:N, M:N‎) قبل تحويلها لجداول.\n⠀\nرفعت المخططين مع ملخص لقواعد رسم الـ ERD وتحويله لـ Relational Model في اللينك ده:", "english_text": "", "hashtags": "#Database #SQLServer #ERD #Backend #DotNet", "scheduled_at": "2026-12-17T20:00", "auto_publish": true}];
+    const DEFAULT_LOCAL_TOKEN = "";
+    const GH_REPO = "mohamedadel452/dotnet-linkedin-scheduler";
     let currentIndex = 0;
+    let isEditing = false;
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.background = isError ? "#ef4444" : "#10b981";
+      t.style.color = isError ? "#fff" : "#052e16";
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 3200);
+    }
+
+    function getGitHubToken() {
+      let tk = localStorage.getItem("agy_gh_sync_token") || "";
+      if (!tk && DEFAULT_LOCAL_TOKEN && !DEFAULT_LOCAL_TOKEN.startsWith("__")) {
+        tk = DEFAULT_LOCAL_TOKEN;
+        localStorage.setItem("agy_gh_sync_token", tk);
+      }
+      return tk.trim();
+    }
+
+    function saveTokenLocal() {
+      const val = document.getElementById("ghTokenInput").value.trim();
+      if (val) {
+        localStorage.setItem("agy_gh_sync_token", val);
+        showToast("✅ تم حفظ مفتاح المزامنة في متصفحك!");
+      }
+    }
+
+    function formatArabicDateTime(isoStr) {
+      if (!isoStr) return "غير محدد";
+      const [dPart, tPart] = isoStr.split("T");
+      if (!tPart) return dPart;
+      let [hh, mm] = tPart.split(":").map(Number);
+      const ampm = hh >= 12 ? "م" : "ص";
+      const hh12 = hh % 12 === 0 ? 12 : hh % 12;
+      return `${dPart} • ${hh12}:${String(mm).padStart(2, '0')} ${ampm}`;
+    }
 
     function formatFullPost(post) {
       const BLANK = "\u2800";
@@ -345,26 +515,47 @@
       return parts.join("\n");
     }
 
+    function linkifyPreview(text) {
+      const escaped = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#38bdf8;text-decoration:underline;direction:ltr;display:inline-block;">$1</a>');
+    }
+
     function renderSidebar() {
       const list = document.getElementById("daysList");
-      list.innerHTML = POSTS.map((p, idx) => `
-        <div class="day-item ${idx === currentIndex ? 'active' : ''}" onclick="selectDay(${idx})">
-          <div class="day-top">
-            <span class="day-num">اليوم ${p.day} • ${p.slot === 'evening' ? '🌙 مسائي 8:00 م' : '☀️ صباحي 10:00 ص'}</span>
-            <span class="day-module">${p.status === 'published' ? '✅ تم النشر' : p.module}</span>
+      list.innerHTML = POSTS.map((p, idx) => {
+        const isPub = p.status === "published";
+        const isAuto = p.auto_publish !== false;
+        let statusClass = isPub ? "status-pub" : (isAuto ? "status-pend" : "status-paused");
+        let statusText = isPub ? "✅ تم النشر" : (isAuto ? "⏰ مجدول تلقائياً" : "⏸️ موقوف مؤقتاً");
+        return `
+          <div class="day-item ${idx === currentIndex ? 'active' : ''}" onclick="selectDay(${idx})">
+            <div class="day-top">
+              <span class="day-num">منشور #${p.seq} • ${p.module}</span>
+              <span class="day-status ${statusClass}">${statusText}</span>
+            </div>
+            <div class="day-title">${p.title}</div>
+            <div class="day-sched">📅 ${formatArabicDateTime(p.scheduled_at)}</div>
           </div>
-          <div class="day-title">${p.title}</div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
     }
 
     function selectDay(idx) {
       currentIndex = idx;
       renderSidebar();
       const post = POSTS[idx];
-      const rawText = formatFullPost(post);
-      const escaped = rawText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      document.getElementById("postPreview").innerHTML = escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#38bdf8;text-decoration:underline;direction:ltr;display:inline-block;">$1</a>');
+
+      document.getElementById("postSeqBadge").textContent = `منشور #${post.seq}`;
+      document.getElementById("singleDateTime").value = (post.scheduled_at || "2026-11-17T20:00").slice(0, 16);
+      document.getElementById("singleStatusSelect").value = post.status === "published" ? "published" : "pending";
+      document.getElementById("singleAutoToggle").checked = post.auto_publish !== false;
+
+      document.getElementById("editPostArea").value = post.arabic_text;
+      document.getElementById("postPreview").innerHTML = linkifyPreview(formatFullPost(post));
+
       document.getElementById("repoBtn").href = post.repo_url;
       const guideBtn = document.getElementById("guideBtn");
       if (post.live_guide_url) {
@@ -373,23 +564,188 @@
       } else {
         guideBtn.style.display = "none";
       }
-      document.getElementById("promptPreview").textContent = post.image_prompt;
 
-      const imgPath = (window.location.protocol === "file:" && !window.location.pathname.endsWith("/index.html") ? "LinkedIn_Branding_Engine/images/" : "images/") + post.image_filename;
+      const imgPath = "images/" + post.image_filename;
       const container = document.getElementById("imgContainer");
-      container.innerHTML = `<img src="${imgPath}" alt="${post.title}" onerror="this.parentElement.innerHTML='<div style=\\'padding:24px;text-align:center;color:#9ca3af;\\'>✨ يتم توليد هذه الصورة تلقائياً عبر Gemini في يوم النشر المخصص لها (${post.image_filename})</div>'" />`;
+      container.innerHTML = `<img src="${imgPath}" alt="${post.title}" />`;
+    }
+
+    function toggleEditPost() {
+      isEditing = !isEditing;
+      const area = document.getElementById("editPostArea");
+      const btn = document.getElementById("editBtn");
+      if (isEditing) {
+        area.style.display = "block";
+        btn.textContent = "✅ إغلاق التعديل";
+      } else {
+        area.style.display = "none";
+        btn.textContent = "✏️ تعديل النص";
+      }
+    }
+
+    function onPostTextEdited() {
+      const post = POSTS[currentIndex];
+      post.arabic_text = document.getElementById("editPostArea").value;
+      document.getElementById("postPreview").innerHTML = linkifyPreview(formatFullPost(post));
+    }
+
+    function updateSinglePostSchedule() {
+      const val = document.getElementById("singleDateTime").value;
+      if (val) {
+        POSTS[currentIndex].scheduled_at = val;
+        POSTS[currentIndex].slot_label = `📅 مجدول: ${val.replace("T", " الساعة ")}`;
+        renderSidebar();
+        showToast("📅 تم تحديث موعد المنشور! اضغط (حفظ في السحابة) لتثبيته.");
+      }
+    }
+
+    function updateSinglePostStatus() {
+      POSTS[currentIndex].status = document.getElementById("singleStatusSelect").value;
+      renderSidebar();
+    }
+
+    function updateSinglePostAuto() {
+      POSTS[currentIndex].auto_publish = document.getElementById("singleAutoToggle").checked;
+      renderSidebar();
+    }
+
+    function applyBulkSchedule() {
+      const startStr = document.getElementById("bulkStartDate").value;
+      const timeStr = document.getElementById("bulkTime").value || "20:00";
+      const intervalDays = parseInt(document.getElementById("bulkIntervalDays").value || "3", 10);
+      if (!startStr) {
+        showToast("⚠️ اختر تاريخ البداية أولاً", true);
+        return;
+      }
+      const [yyyy, mm, dd] = startStr.split("-").map(Number);
+      const [hh, min] = timeStr.split(":").map(Number);
+      let cursor = new Date(yyyy, mm - 1, dd, hh, min);
+
+      let count = 0;
+      POSTS.forEach(p => {
+        if (p.status !== "published") {
+          const y = cursor.getFullYear();
+          const m = String(cursor.getMonth() + 1).padStart(2, "0");
+          const d = String(cursor.getDate()).padStart(2, "0");
+          const h = String(cursor.getHours()).padStart(2, "0");
+          const mi = String(cursor.getMinutes()).padStart(2, "0");
+          p.scheduled_at = `${y}-${m}-${d}T${h}:${mi}`;
+          p.slot_label = `📅 مجدول: ${y}-${m}-${d} الساعة ${h}:${mi}`;
+          p.auto_publish = true;
+          cursor.setDate(cursor.getDate() + intervalDays);
+          count++;
+        }
+      });
+      selectDay(currentIndex);
+      showToast(`⚡ تم إعادة جدولة ${count} منشور قادم! جاري الحفظ في السحابة...`);
+      saveAllToGitHubCloud();
+    }
+
+    async function saveAllToGitHubCloud() {
+      const token = getGitHubToken();
+      if (!token) {
+        showToast("⚠️ أدخل مفتاح المزامنة (GitHub Token) أسفل يمين الصفحة أولاً لحفظ المواعيد في السحابة", true);
+        return;
+      }
+      const pill = document.getElementById("syncStatusPill");
+      pill.textContent = "⏳ جاري الحفظ في السحابة...";
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/posts_queue.json`, {
+          headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github+json" }
+        });
+        if (!getRes.ok) throw new Error("تأكد من صلاحية مفتاح GitHub Token");
+        const fileData = await getRes.json();
+
+        const updatedJsonStr = JSON.stringify({ posts: POSTS }, null, 2);
+        const utf8Bytes = new TextEncoder().encode(updatedJsonStr);
+        let binaryStr = "";
+        utf8Bytes.forEach(b => binaryStr += String.fromCharCode(b));
+        const contentB64 = btoa(binaryStr);
+
+        const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/posts_queue.json`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "chore: update custom post schedule from Studio UI",
+            content: contentB64,
+            sha: fileData.sha
+          })
+        });
+        if (!putRes.ok) throw new Error("فشل حفظ الملف على GitHub");
+        pill.textContent = "✅ تم الحفظ في السحابة بنجاح";
+        showToast("☁️ تم حفظ كل المواعيد والتعديلات في السحابة بنجاح!");
+      } catch (err) {
+        pill.textContent = "⚠️ خطأ في المزامنة";
+        showToast("❌ " + err.message, true);
+      }
+    }
+
+    async function triggerCloudPublishNow() {
+      const token = getGitHubToken();
+      if (!token) {
+        showToast("⚠️ أدخل مفتاح GitHub Token أسفل الصفحة لتشغيل النشر الفوري", true);
+        return;
+      }
+      const post = POSTS[currentIndex];
+      if (!confirm(`هل تريد نشر المنشور #${post.seq} (${post.title}) الآن فوراً على حسابك في LinkedIn؟`)) return;
+
+      try {
+        await saveAllToGitHubCloud();
+        const res = await fetch(`https://api.github.com/repos/${GH_REPO}/actions/workflows/linkedin_publisher.yml/dispatches`, {
+          method: "POST",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ref: "master",
+            inputs: {
+              day: String(post.seq),
+              dry_run: "false"
+            }
+          })
+        });
+        if (res.status === 204 || res.ok) {
+          POSTS[currentIndex].status = "published";
+          renderSidebar();
+          showToast(`🚀 بدأ نشر المنشور #${post.seq} على LinkedIn! سيظهر على حسابك خلال 25 ثانية.`);
+        } else {
+          throw new Error("تعذر إرسال أمر النشر الفوري");
+        }
+      } catch (err) {
+        showToast("❌ " + err.message, true);
+      }
     }
 
     function copyCurrentPost() {
       const text = formatFullPost(POSTS[currentIndex]);
       navigator.clipboard.writeText(text).then(() => {
-        const t = document.getElementById("toast");
-        t.style.display = "block";
-        setTimeout(() => { t.style.display = "none"; }, 2500);
+        showToast("✅ تم نسخ المنشور بالكامل إلى الحافظة!");
       });
     }
 
+    async function loadLatestQueueFromCloud() {
+      const tk = getGitHubToken();
+      if (tk) document.getElementById("ghTokenInput").value = tk;
+      try {
+        const res = await fetch(`https://raw.githubusercontent.com/${GH_REPO}/master/posts_queue.json?t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.posts)) {
+            POSTS = data.posts;
+            selectDay(currentIndex);
+          }
+        }
+      } catch (e) {}
+    }
+
     selectDay(0);
+    loadLatestQueueFromCloud();
   </script>
 </body>
 </html>

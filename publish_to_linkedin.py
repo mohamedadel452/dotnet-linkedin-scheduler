@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Automated LinkedIn Publisher for Mohamed Adel's .NET Engineering Journey
-Works both locally (via linkedin_config.json) and 24/7 in the cloud via GitHub Actions Secrets!
+Supports custom per-post scheduled_at (date & time in Cairo UTC+2) and cloud GitHub Actions execution.
 """
 import os
 import sys
@@ -16,6 +16,13 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUEUE_FILE = os.path.join(BASE_DIR, "posts_queue.json")
 CONFIG_FILE = os.path.join(BASE_DIR, "linkedin_config.json")
 IMAGES_DIR = os.path.join(BASE_DIR, "images")
+
+
+def get_cairo_now():
+    """Return current datetime in Cairo timezone (UTC+2)."""
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    cairo_tz = datetime.timezone(datetime.timedelta(hours=2))
+    return utc_now.astimezone(cairo_tz).replace(tzinfo=None)
 
 
 def load_json(path):
@@ -187,7 +194,7 @@ def send_email_notification(config, post, post_urn):
     msg["To"] = notify_to
     msg.set_content(
         f"مرحباً محمد،\n\n"
-        f"تم بنجاح نشر منشورك الجديد على LinkedIn تلقائياً عبر GitHub Actions!\n\n"
+        f"تم بنجاح نشر منشورك الجديد على LinkedIn تلقائياً!\n\n"
         f"📌 العنوان: {post['title']}\n"
         f"📂 القسم: {post['module']}\n"
         f"🔗 رابط المنشور المباشر على LinkedIn:\n{post_url}\n\n"
@@ -207,6 +214,7 @@ def send_email_notification(config, post, post_urn):
 def main():
     parser = argparse.ArgumentParser(description="Publish Scheduled .NET LinkedIn Post")
     parser.add_argument("--day", type=int, help="Specific post seq number to process; defaults to next pending post.")
+    parser.add_argument("--check-schedule", action="store_true", help="Only publish if a pending post's scheduled_at (Cairo time) has arrived.")
     parser.add_argument("--set-token", type=str, help="Save LinkedIn OAuth2 Access Token into linkedin_config.json")
     parser.add_argument("--dry-run", action="store_true", help="Preview the formatted post without calling LinkedIn API")
     args = parser.parse_args()
@@ -219,6 +227,8 @@ def main():
 
     queue_data = load_json(QUEUE_FILE)
     posts = queue_data.get("posts", [])
+    cairo_now = get_cairo_now()
+    print(f"Current Cairo Time (UTC+2): {cairo_now.strftime('%Y-%m-%d %H:%M')}")
 
     target_post = None
     if args.day:
@@ -226,6 +236,31 @@ def main():
             if p.get("seq", p["day"]) == args.day:
                 target_post = p
                 break
+    elif args.check_schedule:
+        # Find the first pending post whose scheduled_at <= current Cairo time and auto_publish is True
+        due_posts = []
+        for p in posts:
+            if p.get("status") != "published" and p.get("auto_publish", True):
+                sched_str = p.get("scheduled_at", "")
+                if sched_str:
+                    try:
+                        sched_dt = datetime.datetime.strptime(sched_str[:16], "%Y-%m-%dT%H:%M")
+                        if cairo_now >= sched_dt:
+                            due_posts.append((sched_dt, p))
+                    except ValueError:
+                        pass
+        if due_posts:
+            due_posts.sort(key=lambda x: x[0])
+            target_post = due_posts[0][1]
+        else:
+            # Show when the next post is scheduled
+            upcoming = [p for p in posts if p.get("status") != "published" and p.get("auto_publish", True)]
+            if upcoming:
+                nxt = upcoming[0]
+                print(f"No post is due right now. Next post #{nxt.get('seq')} ('{nxt['title']}') is scheduled for {nxt.get('scheduled_at')} Cairo time.")
+            else:
+                print("No pending auto-publish posts in queue.")
+            return 0
     else:
         for p in posts:
             if p.get("status") != "published":
@@ -241,7 +276,7 @@ def main():
     has_image = os.path.exists(img_path)
 
     print(f"=== Selected Post #{target_post.get('seq', target_post['day'])}: {target_post['title']} ===")
-    print(f"Module: {target_post['module']}")
+    print(f"Scheduled At: {target_post.get('scheduled_at', 'Immediate')}")
     print(f"Image Ready: {has_image} ({img_path})")
 
     token = (os.environ.get("LINKEDIN_ACCESS_TOKEN") or config.get("access_token") or "").strip()
@@ -252,8 +287,6 @@ def main():
         with open(out_preview, "w", encoding="utf-8") as f:
             f.write(full_text)
         print(f"Saved formatted post preview to: {out_preview}")
-        if not token and not args.dry_run:
-            print("NOTE: No LINKEDIN_ACCESS_TOKEN found in env or linkedin_config.json.")
         return 0
 
     if not person_urn:
@@ -274,7 +307,7 @@ def main():
     print("Successfully published to LinkedIn! Post ID:", post_urn)
 
     target_post["status"] = "published"
-    target_post["published_at"] = datetime.datetime.now().isoformat()
+    target_post["published_at"] = cairo_now.strftime("%Y-%m-%dT%H:%M:%S")
     target_post["linkedin_post_id"] = post_urn
     save_json(QUEUE_FILE, queue_data)
     send_email_notification(config, target_post, post_urn)

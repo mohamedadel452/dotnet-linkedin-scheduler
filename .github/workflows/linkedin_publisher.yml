@@ -2,16 +2,16 @@ name: Automated LinkedIn Publisher (.NET Journey)
 
 on:
   schedule:
-    # Runs every Sunday, Tuesday, and Thursday at 18:00 UTC (8:00 PM Cairo Time)
-    - cron: '0 18 * * 0,2,4'
+    # Checks every 30 minutes and publishes any post whose custom scheduled_at (Cairo Time) has arrived!
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       day:
-        description: 'Optional specific post number (leave empty for next pending post)'
+        description: 'Optional specific post number (leave empty for scheduled check)'
         required: false
         default: ''
       dry_run:
-        description: 'Set to true to test the workflow without publishing to LinkedIn'
+        description: 'Set to true to test without publishing to LinkedIn'
         required: false
         default: 'false'
 
@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Publish Next Scheduled Post to LinkedIn
+      - name: Check Schedule or Publish Post to LinkedIn
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
@@ -44,13 +44,12 @@ jobs:
           if [ -n "${{ github.event.inputs.day }}" ]; then
             python publish_to_linkedin.py --day "${{ github.event.inputs.day }}" $DRY_FLAG
           else
-            python publish_to_linkedin.py $DRY_FLAG
+            python publish_to_linkedin.py --check-schedule $DRY_FLAG
           fi
-          python build_studio.py
 
-      - name: Save updated queue and mobile studio to repository
+      - name: Save updated queue state to repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add posts_queue.json index.html
-          git diff --staged --quiet || (git commit -m "chore: update LinkedIn studio & queue state [skip ci]" && git push)
+          git add posts_queue.json
+          git diff --staged --quiet || (git commit -m "chore: mark LinkedIn post as published [skip ci]" && git push)
