@@ -107,7 +107,7 @@ def upload_image_to_linkedin(access_token, person_urn, image_path):
 
 
 def format_bilingual_post(post):
-    """Format a clean, natural, handwritten-style Arabic developer post without AI-looking formatting."""
+    """Format a 100% Mobile-Safe Arabic RTL post where every line starts and ends cleanly without BiDi scrambling."""
     BLANK = "\u2800"
     parts = [
         post["arabic_text"].strip(),
@@ -115,16 +115,16 @@ def format_bilingual_post(post):
     ]
     if post.get("live_guide_url"):
         parts.extend([
-            "الكود على GitHub:",
+            "🔗 رابط الكود والمشروع:",
             post["repo_url"].strip(),
             BLANK,
-            "الملخص التفاعلي (Live HTML):",
+            "🌐 رابط الشرح التفاعلي الكامل:",
             post["live_guide_url"].strip(),
             BLANK,
         ])
     else:
         parts.extend([
-            "حسابي على GitHub:",
+            "🔗 رابط حسابي والمشاريع:",
             post["repo_url"].strip(),
             BLANK,
         ])
