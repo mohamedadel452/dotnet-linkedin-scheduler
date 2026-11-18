@@ -55,10 +55,12 @@
       "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics03-Assigment/Study_Guide/CSharp_Basics_Session03_Guide.html",
       "image_filename": "day03_safe_casting.png",
       "image_prompt": "CLR String Intern Pool and StringBuilder Linked-List of char[] Chunks.",
-      "status": "pending",
+      "status": "published",
       "arabic_text": "لما بنقارن نصين ثابتين ليهم نفس القيمة في لغة C# باستخدام دالة ReferenceEquals النتيجة بترجع true، لكن لو بنينا نفس النص وقت التشغيل من مصفوفة حروف النتيجة بترجع false بسبب وجود الـ String Intern Pool في الذاكرة.\n⠀\nالتفصيلة المهمة هنا هي إن النصوص اللي بتدخل جوه الـ Intern Pool بتتخزن في منطقة ذاكرة خاصة مبيتمش مسحها بواسطة الـ Garbage Collector طول ما البرنامج شغال.\n⠀\nعشان كده استدعاء دالة Intern يدوياً مع نصوص متغيرة جاية من المستخدمين ممكن يسبب تسريب في الذاكرة من غير ما تحس.\n⠀\nومعلومة تانية جميلة في تصميم كلاس StringBuilder في الإصدارات الحديثة:\nبدل ما يعتمد على مصفوفة واحدة بتكبر وتنسخ كل العناصر القديمة في كل مرة، هو شغال داخلياً كسلسلة مترابطة من المصفوفات الصغيرة اسمها Chunks؛ ولما الجزء الحالي يتملي بيحجز جزء جديد ويربطه باللي قبله فوراً من غير نسخ البيانات القديمة.\n⠀\nالكود والتفصيل المعماري ليهم موجودين في الروابط دي:",
       "english_text": "",
-      "hashtags": "#CSharp #DotNet #CLR #Performance #SoftwareEngineering"
+      "hashtags": "#CSharp #DotNet #CLR #Performance #SoftwareEngineering",
+      "published_at": "2026-11-18T18:07:00",
+      "linkedin_post_id": "urn:li:share:7528851267226386432"
     },
     {
       "seq": 4,
