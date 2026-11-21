@@ -76,10 +76,12 @@
       "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics04-Assigment/Study_Guide/CSharp_Basics_Session04_Guide.html",
       "image_filename": "day04_stringbuilder_performance.png",
       "image_prompt": "Stack Frame Managed Pointer vs Reference Copy in C#.",
-      "status": "pending",
+      "status": "published",
       "arabic_text": "من أكتر الأسئلة اللي بتكشف فهم الميموري في الدوت نت: طالما المصفوفة Array هي أصلاً Reference Type، إيه اللي بيتغير في الذاكرة لما نبعتها لدالة باستخدام الكلمة المفتاحية ref في الكود؟\n⠀\nفي الوضع العادي من غير ref، الدالة الجديدة بتستلم نسخة من العنوان بحجم 8 بايت بتشاور على نفس المصفوفة في الـ Heap.\n⠀\nلو عدلت عنصر جوه المصفوفة التعديل هيظهر بره عادي، لكن لو حاولت تبدل المصفوفة كلها بمصفوفة جديدة باستخدام new، إنت كده غيرت النسخة المحلية بس والمصفوفة الأصلية عند المستدعي مش هتتأثر.\n⠀\nأما لما بنبعت المصفوفة باستخدام ref، المترجم بيبعت مؤشر مباشر اسمه Managed Pointer بيشاور على مكان المتغير الأصلي نفسه جوه الـ Stack Frame بتاع الدالة الأب، فبتقدر تبدل المصفوفة الأصلية بالكامل بمصفوفة جديدة في الذاكرة.\n⠀\nمثال الكود والرسوم التوضيحية للـ Stack والـ Heap في الروابط دي:",
       "english_text": "",
-      "hashtags": "#CSharp #DotNet #MemoryModel #TechInterview #Backend"
+      "hashtags": "#CSharp #DotNet #MemoryModel #TechInterview #Backend",
+      "published_at": "2026-11-21T22:39:43",
+      "linkedin_post_id": "urn:li:share:7530007059388366848"
     },
     {
       "seq": 5,
