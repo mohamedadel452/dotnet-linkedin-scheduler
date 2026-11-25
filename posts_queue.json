@@ -97,10 +97,12 @@
       "live_guide_url": "https://mohamedadel452.github.io/CSharp-Basics05-Assigment/Study_Guide/CSharp_Basics_Session05_Guide.html",
       "image_filename": "day05_modular_methods.png",
       "image_prompt": "C# Enum.TryParse numeric trap vs Enum.IsDefined and internal Assembly boundaries.",
-      "status": "pending",
+      "status": "published",
       "arabic_text": "غلطة مشهورة جداً بتعدي في المشاريع وقت التحقق من قيم الـ Enum في لغة C# وممكن تدخل بيانات غلط للداتابيز من غير ما تاخد بالك:\n⠀\nلو معرفين تصنيف كتاب Genre فيه ثلاث قيم بس (0 و 1 و 2)، وجالك من المستخدم نص مكتوب فيه رقم 999 وفحصته بدالة Enum.TryParse، المفاجأة إن الدالة هترجع true وهتقبل الرقم عادي جداً كأنه تصنيف سليم!\n⠀\nالسبب إن الـ Enum تحت السطح في الـ CLR هو مجرد غلاف فوق نوع رقمي int، فأي نص يمثل رقم صحيح بيتم تحويله فوراً من غير التأكد هل الرقم ده من ضمن الاختيارات المعرفة ولا لأ.\n⠀\nعشان تقفل الثغرة دي صح، لازم تتأكد بعد التحويل باستخدام دالة Enum.IsDefined أو تحدد شرط عدم السماح بالأرقام غير المعرفة.\n⠀\nتفاصيل الكود مع شرح حدود الوصول على مستوى الـ Assembly في الروابط دي:",
       "english_text": "",
-      "hashtags": "#CSharp #DotNet #CleanCode #WebAPI #BackendDevelopment"
+      "hashtags": "#CSharp #DotNet #CleanCode #WebAPI #BackendDevelopment",
+      "published_at": "2026-11-25T23:53:38",
+      "linkedin_post_id": "urn:li:share:7531475213327384576"
     },
     {
       "seq": 6,
